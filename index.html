@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<style type="text/css">
+
+			img
+			{
+				width : 500px;
+				height : 500px;
+				display:block;
+			}
+		</style>	
+	</head>
+
+	<body>
+
+		<img data-preload="http://3.bp.blogspot.com/-xr2K7LSsjy4/UuaYcCwOSkI/AAAAAAAAAjw/ryO7x_VDRWw/s1600/neutral-its-something-l.png" src="" />
+
+		<img data-preload="http://vipdictionary.com/img/im-not-ungrateful-but-i-was-kinda-expecting-a-strong-dude-or-something.jpg" src="" />
+
+		<img data-preload="http://spamusement.com/gfx/250.gif" src="" />
+		
+		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="preloader.js"></script>
+
+		<script>
+
+			pui.preload('img[data-preload]', {
+
+				complete : function (images)
+				{
+					console.log('All Images Loaded');
+				},
+
+				eachImage : function (images)
+				{	
+					console.log(this);
+					this.src = this.getAttribute('data-preload');
+				},
+
+				error : function (images)
+				{
+					console.log(this);
+				}
+			});
+		
+		</script>
+	</body>
+
+</html>
