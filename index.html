@@ -7,42 +7,76 @@
 
 			img
 			{
-				width : 500px;
-				height : 500px;
-				display:block;
+				width  : 200px;
+				height : 200px;
+				float  : left;
 			}
 		</style>	
 	</head>
 
 	<body>
 
-		<img data-preload="http://3.bp.blogspot.com/-xr2K7LSsjy4/UuaYcCwOSkI/AAAAAAAAAjw/ryO7x_VDRWw/s1600/neutral-its-something-l.png" src="" />
+		<h1>Progress: <span data-progress></h1>
 
-		<img data-preload="http://vipdictionary.com/img/im-not-ungrateful-but-i-was-kinda-expecting-a-strong-dude-or-something.jpg" src="" />
-
-		<img data-preload="http://spamusement.com/gfx/250.gif" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?1" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?2" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?3" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?4" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?5" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?6" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?7" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?8" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?9" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?11" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?12" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?13" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?14" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?15" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?16" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?17" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?18" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?19" src="" />	
+		<img data-preloader="http://lorempixel.com/400/200?21" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?22" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?23" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?24" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?25" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?26" src="" />
+		<img data-preloader="http://lorempixel.com/400/200?27" src="" />
+		<img data-preloader="http://lorempixel.com/100/200?28" src="" />
+		<img data-preloader="http://lorempixel.com/250/200?29" src="" />									
 		
-		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script src="preloader.js"></script>
 
 		<script>
 
-			pui.preload('img[data-preload]', {
+			var progressHolder = document.querySelector('span[data-progress]');
 
-				complete : function (images)
+			PreLoader('img[data-preloader]', {
+
+				complete : function (images, complete, error)
 				{
-					console.log('All Images Loaded');
+					progressHolder.innerHTML = 'Complete';
+
+					console.log(complete);
+					console.log(error);
 				},
 
-				eachImage : function (images)
-				{	
-					console.log(this);
-					this.src = this.getAttribute('data-preload');
+				loaded : function (image, progress)
+				{
+					image.src = image.getAttribute('data-preloader');
+
+					progressHolder.innerHTML = progress;
 				},
 
-				error : function (images)
+				error : function (image, progress)
 				{
-					console.log(this);
+					progressHolder.innerHTML = progress;
+				},
+
+				start : function (images)
+				{
+
 				}
 			});
 		
