@@ -73,11 +73,15 @@ PreLoader = (function (window, document)
 	// Default Options
 
 	PreLoader.prototype._defaultOptions =
-	{
+	{	
+		/* Callbacks */
 		complete  : null,
 		loaded    : null,
 		error     : null,
-		start     : null
+		start     : null,
+
+		/* Options */
+		type      : 'parallel'
 	};
 
 	// =========================================================
@@ -92,7 +96,16 @@ PreLoader = (function (window, document)
 				this.options.start.call(this, this.images);
 			}
 
-			this._preload();
+			if (this.options.type === 'parallel')
+			{
+				this._preLoadParallel();
+			}
+			else if (this.options.type === 'sequence')
+			{	
+				this.sequenceImages = Array.prototype.slice.call(this.images, 0);
+
+				this._preLoadSequence();
+			}
 		}
 		else
 		{
@@ -165,38 +178,64 @@ PreLoader = (function (window, document)
 			if (isFunction(this.options.complete))
 			{
 				this.options.complete.call(this, this.images, this.loadedImages, this.errorImages);
+
+				return false;
 			}
+		}
+
+		if (this.options.type === 'sequence')
+		{
+			this._preLoadSequence();
 		}
 	};
 
 	// =========================================================
-	// Preload Images
+	// Load Single Image
 
-	PreLoader.prototype._preload = function ()
+	PreLoader.prototype._preLoadImage = function (img)
 	{	
-		var	self = this;
+		var self  = this,
+			image = new Image();
 
+		image.onload = function ()
+		{
+			self._preLoadEvent('loaded', img);
+		}
+
+		image.onerror = function ()
+		{
+			self._preLoadEvent('error', img)				
+		}
+
+		image.src = img.getAttribute('data-preloader');
+	};
+
+	// =========================================================
+	// Preload Images Parallel
+
+	PreLoader.prototype._preLoadParallel = function ()
+	{
 		for (var i = 0; i < this.imagesLength; i++)
 		{	
-			(function (img)
-			{
-				var image = new Image();
-
-				image.onload = function ()
-				{
-					self._preLoadEvent('loaded', img);
-				}
-
-				image.onerror = function ()
-				{
-					self._preLoadEvent('error', img)				
-				}
-
-				image.src = img.getAttribute('data-preloader');
-
-			})(this.images[i]);
+			this._preLoadImage(this.images[i]);
 		}
 	};
+
+	// =========================================================
+	// Preload Images Sequence
+
+	PreLoader.prototype._preLoadSequence = function ()
+	{	
+		if (this.sequenceImages.length)
+		{
+			var imageToLoad = this.sequenceImages.shift();
+
+			this._preLoadImage(imageToLoad);
+		}
+	}
+
+	// =========================================================
+	// Return Constructor
 
 	return PreLoader;
 

@@ -54,6 +54,8 @@
 
 			PreLoader('img[data-preloader]', {
 
+				type : 'sequence',
+
 				complete : function (images, complete, error)
 				{
 					progressHolder.innerHTML = 'Complete';
