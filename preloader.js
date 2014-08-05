@@ -75,10 +75,10 @@ PreLoader = (function (window, document)
 	PreLoader.prototype._defaultOptions =
 	{	
 		/* Callbacks */
-		complete  : null,
-		loaded    : null,
-		error     : null,
-		start     : null,
+		complete  : function () {},
+		loaded    : function () {},
+		error     : function () {},
+		start     : function () {},
 
 		/* Options */
 		type      : 'parallel'
@@ -91,10 +91,7 @@ PreLoader = (function (window, document)
 	{
 		if (this.images.length > 0)
 		{	
-			if (isFunction(this.options.start))
-			{
-				this.options.start.call(this, this.images);
-			}
+			this.options.start.call(this, this.images);
 
 			if (this.options.type === 'parallel')
 			{
@@ -109,10 +106,7 @@ PreLoader = (function (window, document)
 		}
 		else
 		{
-			if (isFunction(this.options.complete))
-			{
-				this.options.complete.call(this, this.images, this.loadedImages, this.errorImages);
-			}
+			this.options.complete.call(this, this.images, this.loadedImages, this.errorImages);
 		}
 	};
 
@@ -127,6 +121,11 @@ PreLoader = (function (window, document)
 		{
 
 		case 'object':
+
+			if (images instanceof Array)
+			{
+				this.isUrls = true;
+			}
 
 			res = images;
 			break;
@@ -156,7 +155,7 @@ PreLoader = (function (window, document)
 
 	PreLoader.prototype._checkProgress = function ()
 	{
-		return Math.round(((this.counter + 1) / this.imagesLength) * 100);
+		return Math.round(((this.counter) / this.imagesLength) * 100);
 	};
 
 	// =========================================================
@@ -168,19 +167,13 @@ PreLoader = (function (window, document)
 
 		this[action + 'Images'].push(image);
 
-		if (isFunction(this.options[action]))
-		{
-			this.options[action].call(this, image, this._checkProgress());
-		}
+		this.options[action].call(this, image, this._checkProgress());
 
 		if (this._isComplete())
 		{
-			if (isFunction(this.options.complete))
-			{
-				this.options.complete.call(this, this.images, this.loadedImages, this.errorImages);
+			this.options.complete.call(this, this.images, this.loadedImages, this.errorImages);
 
-				return false;
-			}
+			return false;
 		}
 
 		if (this.options.type === 'sequence')
@@ -207,7 +200,7 @@ PreLoader = (function (window, document)
 			self._preLoadEvent('error', img)				
 		}
 
-		image.src = img.getAttribute('data-preloader');
+		image.src = (this.isUrls) ? img : img.getAttribute('data-preloader');
 	};
 
 	// =========================================================
