@@ -176,10 +176,7 @@ PreLoader = (function (window, document)
 			return false;
 		}
 
-		if (this.options.type === 'sequence')
-		{
-			this._preLoadSequence();
-		}
+		this.options.type === 'sequence' && this._preLoadSequence();
 	};
 
 	// =========================================================
@@ -219,12 +216,7 @@ PreLoader = (function (window, document)
 
 	PreLoader.prototype._preLoadSequence = function ()
 	{	
-		if (this.sequenceImages.length)
-		{
-			var imageToLoad = this.sequenceImages.shift();
-
-			this._preLoadImage(imageToLoad);
-		}
+		this.sequenceImages.length && this._preLoadImage(this.sequenceImages.shift());
 	}
 
 	// =========================================================
