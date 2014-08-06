@@ -42,6 +42,21 @@ PreLoader = (function (window, document)
 		return (typeof fn === 'function')
 	};
 
+	// =========================================================
+	// Turn Param To Array
+
+	var toArray = function (a)
+	{	
+		var res = [];
+
+		for (var i = 0, l = a.length; i < l; i++)
+		{
+			res.push(a[i]);
+		}
+
+		return res;
+	};
+
 	// ==================================================================================================================
     // PreLoader Constructor
     // ==================================================================================================================
@@ -99,7 +114,7 @@ PreLoader = (function (window, document)
 			}
 			else if (this.options.type === 'sequence')
 			{	
-				this.sequenceImages = Array.prototype.slice.call(this.images, 0);
+				this.sequenceImages = this.images.slice();
 
 				this._preLoadSequence();
 			}
@@ -125,14 +140,18 @@ PreLoader = (function (window, document)
 			if (images instanceof Array)
 			{
 				this.isUrls = true;
+				res         = images;
+			}
+			else
+			{
+				res = toArray(images);
 			}
 
-			res = images;
 			break;
 
 		case 'string':
 
-			res = document.querySelectorAll(images);
+			res = toArray(document.querySelectorAll(images));
 			break;
 
 		default :
